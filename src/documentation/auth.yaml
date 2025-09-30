@@ -1,0 +1,166 @@
+openapi: 3.0.0
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login exitoso, devuelve accessToken y refreshToken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Credenciales inválidas
+        '404':
+          description: Usuario no encontrado
+        '500':
+          description: Error interno del servidor
+
+  /api/auth/logout:
+    post:
+      summary: Cerrar sesión
+      tags: [Auth]
+      responses:
+        '200':
+          description: Logout exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '500':
+          description: Error interno del servidor
+
+  /api/auth/forgot-password:
+    post:
+      summary: Solicitar código OTP para restablecer contraseña
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: OTP enviado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '404':
+          description: Usuario no encontrado
+        '500':
+          description: Error interno del servidor
+
+  /api/auth/reset-password:
+    post:
+      summary: Restablecer contraseña con OTP
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Contraseña actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '400':
+          description: OTP inválido o contraseñas no coinciden
+        '404':
+          description: Usuario no encontrado
+        '500':
+          description: Error interno del servidor
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: usuario@mail.com
+        password:
+          type: string
+          format: password
+          example: "123456"
+
+    LoginResponse:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: LOGUEADO CORRECTAMENTE
+        accessToken:
+          type: string
+          description: Token de acceso JWT
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+        refreshToken:
+          type: string
+          description: Token de refresco JWT
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+
+    LogoutResponse:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: HA SIDO DESLOGUEADO!!!
+
+    ForgotPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: usuario@mail.com
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - email
+        - otp
+        - newPassword
+        - confirmPassword
+      properties:
+        email:
+          type: string
+          format: email
+          example: usuario@mail.com
+        otp:
+          type: string
+          example: "123456"
+        newPassword:
+          type: string
+          format: password
+          example: "newPass123"
+        confirmPassword:
+          type: string
+          format: password
+          example: "newPass123"
+
+    GenericResponse:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: CODIGO OTP ENVIADO EXITOSAMENTE

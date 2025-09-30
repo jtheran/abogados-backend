@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           String           @id @default(uuid())
+  nombre       String
+  tarjetaProfesional    String  @unique
+  email        String           @unique
+  telefono     String?
+  rol          String
+  documento    String           @unique
+  tipoDocumento   String
+  passwordHash String
+  ultimoAcceso DateTime?
+  estado       Boolean       @default(true)
+  fechaRegistro DateTime     @default(now())
+
+  casos       Caso[]        @relation("AbogadoCasos")
+  documentos  Documento[]
+  eventos     Evento[]
+  citas       Cita[]
+  notificaciones Notificacion[]
+  logs        Log[]
+}
+
+
+model Parte {
+  id                 String           @id @default(uuid())
+  nombre             String
+  tipoParte          String        // 'Demandante','Demandado','Tercero'
+  documentoIdentidad String?
+  telefono           String?
+  email              String?
+  direccion          String?
+
+  casos              CasoPartes[]
+}
+
+model Juzgado {
+  id       String     @id @default(uuid())
+  nombre   String
+  ciudad   String?
+  direccion String?
+  telefono String?
+  email    String?
+
+  casos    Caso[]
+}
+
+model Caso {
+  id             String       @id @default(uuid())
+  numeroRadicado String       @unique
+  nombreCaso     String?
+  descripcion    String?
+  estado         String       // 'Activo','Archivado','Cerrado','En proceso'
+  fechaCreacion  DateTime     @default(now())
+
+  abogadoId String
+  abogado   Usuario @relation("AbogadoCasos", fields: [abogadoId], references: [id])
+
+  juzgadoId String?
+  juzgado   Juzgado? @relation(fields: [juzgadoId], references: [id])
+
+  partes     CasoPartes[]
+  documentos Documento[]
+  eventos    Evento[]
+  citas      Cita[]
+  notificaciones Notificacion[]
+}
+
+model CasoPartes {
+  casoId String
+  parteId String
+  rolParte String
+
+  caso  Caso  @relation(fields: [casoId], references: [id])
+  parte Parte @relation(fields: [parteId], references: [id])
+
+  @@id([casoId, parteId])
+}
+
+model Documento {
+  id          String   @id @default(uuid())
+  nombre      String
+  rutaArchivo String
+  tipo        String?   // memorial, contrato, prueba, sentencia
+  fechaSubida DateTime  @default(now())
+
+  casoId String
+  caso   Caso @relation(fields: [casoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  subidoPorId String
+  subidoPor   Usuario @relation(fields: [subidoPorId], references: [id], onDelete: NoAction)
+}
+
+model Evento {
+  id          String   @id @default(uuid())
+  titulo      String
+  descripcion String?
+  fechaEvento DateTime
+
+  casoId String
+  caso   Caso @relation(fields: [casoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  creadoPorId String
+  creadoPor   Usuario @relation(fields: [creadoPorId], references: [id], onDelete: NoAction)
+}
+
+model Cita {
+  id            String   @id @default(uuid())
+  fechaCita     DateTime
+  lugar         String?
+  descripcion   String?
+  participantes String? // lista de nombres o IDs serializados
+
+  casoId String
+  caso   Caso @relation(fields: [casoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  creadoPorId String
+  creadoPor   Usuario @relation(fields: [creadoPorId], references: [id], onDelete: NoAction)
+}
+
+model Notificacion {
+  id         String   @id @default(uuid())
+  tipo       String   // email, whatsapp, sistema
+  mensaje    String
+  estado     String   @default("Pendiente")
+  fechaEnvio DateTime @default(now())
+
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  casoId String?
+  caso   Caso? @relation(fields: [casoId], references: [id], onDelete: NoAction)
+}
+
+model Log {
+  id         String   @id @default(uuid())
+  nivel       String  
+  mensaje    String
+  fechaCreacion DateTime @default(now())
+  modulo     String
+
+  usuarioId String?
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}

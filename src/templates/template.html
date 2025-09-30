@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notificación de Usuario</title>
+  <style>
+    body {
+      font-family: "Courier New", Courier, monospace;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border: 2px solid #003b4d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #008080;
+      color: white;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .content {
+      padding: 1.5rem;
+      color: #000000;
+      font-size: 16px;
+    }
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      padding: 1rem;
+      color: #555;
+    }
+    .credentials {
+      margin-top: 1rem;
+    }
+    .credentials ul {
+      list-style: disc;
+      margin-left: 2rem;
+    }
+    .logo {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Radicación Cuentas de Cobro</div>
+    <div class="content">
+      <p><strong>Notificación para: {{name}}</strong></p>
+
+      {{message}}
+
+      <div class="logo">
+        <img src="./logo.png" alt="Coosalud" height="40"/>
+        <p style="font-size: 12px; margin-top: 0.5rem;">Vigilado <strong style="color:#0096d6;">Supersalud</strong></p>
+      </div>
+    </div>
+    <div class="footer">
+      Este correo fue generado automáticamente. Por favor, no responder.
+    </div>
+  </div>
+</body>
+</html>
