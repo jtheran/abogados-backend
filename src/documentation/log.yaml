@@ -1,0 +1,68 @@
+paths:
+  /api/logs:
+    get:
+      summary: Listar todos los logs
+      tags:
+        - Logs
+      responses:
+        200:
+          description: Lista de logs obtenida correctamente
+    post:
+      summary: Crear un nuevo log
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogCreate'
+      responses:
+        201:
+          description: Log creado exitosamente
+
+  /api/logs/{id}:
+    get:
+      summary: Obtener un log por ID
+      tags:
+        - Logs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Log encontrado
+        404:
+          description: Log no encontrado
+
+    delete:
+      summary: Eliminar un log
+      tags:
+        - Logs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Log eliminado correctamente
+
+components:
+  schemas:
+    LogCreate:
+      type: object
+      properties:
+        nivel:
+          type: string
+          enum: [INFO, WARN, ERROR, DEBUG]
+        mensaje:
+          type: string
+        modulo:
+          type: string
+        usuarioId:
+          type: string

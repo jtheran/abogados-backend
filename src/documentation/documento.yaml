@@ -1,0 +1,83 @@
+paths:
+  /api/documentos:
+    get:
+      summary: Listar todos los documentos
+      tags:
+        - Documentos
+      responses:
+        200:
+          description: Lista de documentos
+    post:
+      summary: Crear un nuevo documento
+      tags:
+        - Documentos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentoCreate'
+      responses:
+        201:
+          description: Documento creado exitosamente
+
+  /api/documentos/{id}:
+    get:
+      summary: Obtener un documento por ID
+      tags:
+        - Documentos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Documento encontrado
+        404:
+          description: Documento no encontrado
+
+    put:
+      summary: Actualizar un documento
+      tags:
+        - Documentos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Documento actualizado
+
+    delete:
+      summary: Eliminar un documento
+      tags:
+        - Documentos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Documento eliminado
+
+components:
+  schemas:
+    DocumentoCreate:
+      type: object
+      properties:
+        nombre:
+          type: string
+        rutaArchivo:
+          type: string
+        tipo:
+          type: string
+        casoId:
+          type: string
+        subidoPorId:
+          type: string

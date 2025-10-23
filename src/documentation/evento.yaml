@@ -1,0 +1,84 @@
+paths:
+  /api/eventos:
+    get:
+      summary: Listar todos los eventos
+      tags:
+        - Eventos
+      responses:
+        200:
+          description: Lista de eventos
+    post:
+      summary: Crear un nuevo evento
+      tags:
+        - Eventos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventoCreate'
+      responses:
+        201:
+          description: Evento creado exitosamente
+
+  /api/eventos/{id}:
+    get:
+      summary: Obtener un evento por ID
+      tags:
+        - Eventos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Evento encontrado
+        404:
+          description: Evento no encontrado
+
+    put:
+      summary: Actualizar un evento
+      tags:
+        - Eventos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Evento actualizado
+
+    delete:
+      summary: Eliminar un evento
+      tags:
+        - Eventos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Evento eliminado
+
+components:
+  schemas:
+    EventoCreate:
+      type: object
+      properties:
+        titulo:
+          type: string
+        descripcion:
+          type: string
+        fechaEvento:
+          type: string
+          format: date-time
+        casoId:
+          type: string
+        creadoPorId:
+          type: string

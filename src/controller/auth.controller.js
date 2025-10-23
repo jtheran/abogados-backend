@@ -16,19 +16,19 @@ export const login = async (req, res) => {
 
         const user = await prisma.usuario.findUnique({
             where: {
-                email
+                email,
+                estado: true,
             }
         });
 
         if(!user){
-            return res.status(404).json({ msg: 'USUARIO NO ESTA REGISTRADO' });
+            return res.status(404).json({ msg: 'Usuario no Encontrado o esta Inactivado' });
         }
 
         const isValidated = await matchPass(password, user.passwordHash);
 
         if(!isValidated){
-            logger.warn('[AUTH] CORREO O PASSWORD ERRONEA!!!!');
-            return res.status(400).json({ msg: 'CORREO O PASSWORD ERRONEA' });
+            return res.status(400).json({ msg: 'Correo o Contraseña Invalida' });
         }
 
         const data = {
@@ -71,6 +71,7 @@ export const logout = (req, res) => {
     }
 };
 
+
 export const forgotPasswrod = async (req, res) => {
     try{
         const { email } = req.body;
@@ -86,7 +87,10 @@ export const forgotPasswrod = async (req, res) => {
 
         otpStore.set(user.email, { otp, expiresAt });
 
-        await sendEmail(user.email, 'CODIGO OTP DE VERIFICACION', `${user.nombre} este es tu codigo
+        await sendEmail(
+            user.email, 
+            'CODIGO OTP DE VERIFICACION', 
+            `${user.nombre} este es tu codigo
             OTP de confirmacion de identidad <br>
             CODIGO OTP: ${otp}`,
             `${user.nombre}`
@@ -98,6 +102,7 @@ export const forgotPasswrod = async (req, res) => {
         return res.status(500).json({ msg: 'ERROR INTERNO DEL SERVIDOR' });
     }
 }
+
 
 export const resetPassword = async (req, res) => {
     try{

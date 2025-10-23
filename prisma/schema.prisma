@@ -30,7 +30,6 @@ model Usuario {
   casos       Caso[]        @relation("AbogadoCasos")
   documentos  Documento[]
   eventos     Evento[]
-  citas       Cita[]
   notificaciones Notificacion[]
   logs        Log[]
 }
@@ -76,7 +75,6 @@ model Caso {
   partes     CasoPartes[]
   documentos Documento[]
   eventos    Evento[]
-  citas      Cita[]
   notificaciones Notificacion[]
 }
 
@@ -118,19 +116,6 @@ model Evento {
   creadoPor   Usuario @relation(fields: [creadoPorId], references: [id], onDelete: NoAction)
 }
 
-model Cita {
-  id            String   @id @default(uuid())
-  fechaCita     DateTime
-  lugar         String?
-  descripcion   String?
-  participantes String? // lista de nombres o IDs serializados
-
-  casoId String
-  caso   Caso @relation(fields: [casoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  creadoPorId String
-  creadoPor   Usuario @relation(fields: [creadoPorId], references: [id], onDelete: NoAction)
-}
 
 model Notificacion {
   id         String   @id @default(uuid())

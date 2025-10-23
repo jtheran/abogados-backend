@@ -7,7 +7,7 @@ import { initSocket } from './utils/socket.js';
 
 adminCreate().then(() => {
     server.listen(config.port, '0.0.0.0', () => {
-        logger.info(`[SERVER] 🚀 Server running on port ${config.port}`, { email: config.adminEmail, modulo: 'General'});
+        //logger.info(`[SERVER] 🚀 Server running on port ${config.port}`, { email: config.adminEmail, modulo: 'General'});
         initSocket(server);
     });
 });

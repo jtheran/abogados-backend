@@ -1,0 +1,104 @@
+paths:
+  /api/notificaciones:
+    get:
+      summary: Listar todas las notificaciones
+      tags:
+        - Notificaciones
+      responses:
+        200:
+          description: Lista de notificaciones obtenida correctamente
+    post:
+      summary: Crear una nueva notificación
+      tags:
+        - Notificaciones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificacionCreate'
+      responses:
+        201:
+          description: Notificación creada exitosamente
+
+  /api/notificaciones/{id}:
+    get:
+      summary: Obtener una notificación por ID
+      tags:
+        - Notificaciones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Notificación encontrada
+        404:
+          description: Notificación no encontrada
+
+    put:
+      summary: Actualizar una notificación
+      tags:
+        - Notificaciones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificacionUpdate'
+      responses:
+        200:
+          description: Notificación actualizada correctamente
+
+    delete:
+      summary: Eliminar una notificación
+      tags:
+        - Notificaciones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Notificación eliminada correctamente
+
+components:
+  schemas:
+    NotificacionCreate:
+      type: object
+      properties:
+        tipo:
+          type: string
+          enum: [email, whatsapp, sistema]
+        mensaje:
+          type: string
+        estado:
+          type: string
+          enum: [Pendiente, Enviado, Error]
+        usuarioId:
+          type: string
+        casoId:
+          type: string
+
+    NotificacionUpdate:
+      type: object
+      properties:
+        tipo:
+          type: string
+        mensaje:
+          type: string
+        estado:
+          type: string
+        usuarioId:
+          type: string
+        casoId:
+          type: string

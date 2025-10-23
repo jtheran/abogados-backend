@@ -4,12 +4,15 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './utils/swagger.js';
 import config from './config/config.js';
+import jwtStrategy from './middleware/passport.js',
 // Importación de tus rutas
 import authRoutes from './routes/auth.route.js';
 import maintenaceRoutes from './routes/maintenance.route.js';
+import userRoutes from './routes/usuario.route.js';
 
 //* INICIALIZACIÓN
 const app = express();
@@ -53,9 +56,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 
 app.use(express.json()); 
 app.use(helmet({ contentSecurityPolicy: false }));
+passport.use(jwtStrategy);
+app.use(passport.initialize());
+
+
 
 //Rutas
 app.use('/api', authRoutes);
 app.use('/api', maintenaceRoutes);
+app.use('/api',userRoutes);
 
 export default server;
